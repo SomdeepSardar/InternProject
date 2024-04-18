@@ -7,4 +7,8 @@ seaborn
 dill
 catboost
 xgboost
--e .
+python-dotenv
+mysql-connector-python
+pymysql
+mlflow
+#-e .
