@@ -7,7 +7,7 @@ Kindly follow these steps to run the project:-
 ## Step2: Create a new environment
 ''' conda create -p venv python==3.10
 
-conda activate venv'''
+conda activate venv '''
 
 ## Step3: Install required packages
 '''pip install -r requirements.txt'''
