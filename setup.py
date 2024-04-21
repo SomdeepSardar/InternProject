@@ -14,11 +14,11 @@ def get_requirements(file_path:str)->List[str]:
     return requirements
 
 setup(
-    name= "PipeLineDemo",
-    version= "0.0.1",
+    name= "PipeLineProject",
+    version= "0.1.0",
     author= "Somdeep Sardar",
     author_email= "sardarsomdeep123@gmail.com",
-    description= "A Demo E2E ML Pipeline",
+    description= "An End-to-End Machine Learning Project using Python and Pipeline.",
     install_requires = get_requirements("requirements.txt"),
     packages= find_packages()
 )
