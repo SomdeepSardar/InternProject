@@ -57,8 +57,8 @@ class DataTransformation:
                 ('scaler', StandardScaler())
             ])
 
-            logging.info(f"In data_transformation Categorical Columns:{categorical_columns}")
-            logging.info(f"In data_transformation Numerical Columns:{numerical_columns}")
+            logging.info(f"In data_transformation line 60 Categorical Columns: {categorical_columns}")
+            logging.info(f"In data_transformation line61 Numerical Columns:{numerical_columns}")
 
             preprocessor=ColumnTransformer(
                 [
@@ -76,30 +76,15 @@ class DataTransformation:
     def initiate_data_transformation(self,train_path,test_path):
         try:
             train_df=pd.read_csv(train_path)
+            logging.info(f"Train dataset read in the initiate_data_transformation line 79: {train_df.head()}")
             test_df=pd.read_csv(test_path)
+            logging.info(f"Test dataset read in the initiate_data_transformation line 81 {test_df.head()}")
 
             logging.info("Reading the train and test file in data_transformation")
 
             preprocessing_obj=self.get_data_transformer_object()
 
             target_column_name="RainTomorrow"
-            # numerical_columns = ['Location', 
-            #                     'MinTemp', 
-            #                     'MaxTemp', 
-            #                     'Rainfall', 
-            #                     'Evaporation', 
-            #                     'Sunshine',
-            #                     'WindGustDir',
-            #                     'WindGustSpeed',
-            #                     'WindDir9am',
-            #                     'WindDir3pm',
-            #                     'WindSpeed9am',
-            #                     'WindSpeed3pm',
-            #                     'Humidity9am',
-            #                     'Humidity3pm',
-            #                     'Pressure9am',
-            #                     'Cloud9am',
-            #                     'Cloud3pm']
 
             ## divide the train dataset to independent and dependent feature
 
@@ -124,7 +109,7 @@ class DataTransformation:
             ]
             test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
 
-            logging.info(f"Saved preprocessing object in data_transformation")
+            logging.info("Saving preprocessing object in data_transformation")
 
             save_object(
 
@@ -132,6 +117,7 @@ class DataTransformation:
                 obj=preprocessing_obj
             )
 
+            logging.info(f'Preprocessing obj saved in line 114 in data_transformation: \n{preprocessing_obj}')
             return (
                 train_arr,
                 test_arr,
