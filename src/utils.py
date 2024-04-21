@@ -4,8 +4,7 @@ from src.exception import CustomException
 from src.logger import logging
 import pandas as pd
 from dotenv import load_dotenv
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import r2_score
+from sklearn.metrics import accuracy_score,confusion_matrix,classification_report
 import pymysql
 
 import pickle
@@ -30,7 +29,9 @@ def read_sql_data():
             db=db
         )
         logging.info("Connection Established",mydb)
-        df=pd.read_sql_query('Select * from weather',mydb)
+        df=pd.read_sql_query('Select * from weatherdata',mydb)
+        logging.info('Reading from Database complete inside utils.py')
+        print("Inside utils.py \n")
         print(df.head())
 
         return df
@@ -51,34 +52,47 @@ def save_object(file_path, obj):
 
     except Exception as e:
         raise CustomException(e, sys)
+    
+def model_evaluation(true, predicted):
+    c_mat = confusion_matrix(true, predicted)
+    a_score = accuracy_score(true, predicted)
+    c_report = classification_report(true, predicted)
+    return c_mat, a_score, c_report
 
-def evaluate_models(X_train, y_train,X_test,y_test,models,param):
-    try:
+def model_performance(X_train, y_train, X_test, y_test, models): 
+    try: 
         report = {}
-
-        for i in range(len(list(models))):
+        for i in range(len(models)): 
             model = list(models.values())[i]
-            para=param[list(models.keys())[i]]
-
-            gs = GridSearchCV(model,para,cv=3)
-            gs.fit(X_train,y_train)
-
-            model.set_params(**gs.best_params_)
-            model.fit(X_train,y_train)
-
-            #model.fit(X_train, y_train)  # Train model
-
-            y_train_pred = model.predict(X_train)
-
+            # Train models
+            model.fit(X_train, y_train)
+            # Test data
             y_test_pred = model.predict(X_test)
 
-            train_model_score = r2_score(y_train, y_train_pred)
+            c_mat, a_score, c_report = model_evaluation(y_test, y_test_pred)
+            #Accuracy Score 
+            print('Model name: ', model)
+            print('Model Training Performance')
+            print("c_mat\n", c_mat)
+            print("a_score in percentage: ", a_score*100)
+            print("c_report: ", c_report)
 
-            test_model_score = r2_score(y_test, y_test_pred)
-
+            logging.info(f'Model: , {model}')
+            logging.info(f'Model Training Performance')
+            logging.info(f"c_mat\n, {c_mat}")
+            logging.info(f"a_score, {a_score}")
+            logging.info(f"c_report, {c_report}")
+            test_model_score = accuracy_score(y_test, y_test_pred)
             report[list(models.keys())[i]] = test_model_score
-
         return report
+
+    except Exception as e: 
+        raise CustomException(e,sys)
+    
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
 
     except Exception as e:
         raise CustomException(e, sys)
